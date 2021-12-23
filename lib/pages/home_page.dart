@@ -9,22 +9,45 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String name = "ButtonOne";
+  int? age;
+
+
+  Future _nextPage() async {
+    Map result = await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (BuildContext context) {
+      return FirstPage(
+        name: "Flutter",
+        age: 22,
+      );
+    }));
+    if (result != null && result.containsKey("name") && result.containsKey("age")) {
+      setState(() {
+        name = result["name"];
+        age = result["age"];
+      });
+    } else {
+      print('Nothing');
+    }
+  }
+  String text(){
+    if(age!=null) return "Name: "+ name+"\nAge: "+age.toString();
+    else return name;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: MaterialButton(
+        body: Center(
+      child: MaterialButton(
         color: Colors.grey[800],
         onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => FirstPage()));
-          // Navigator.push(
-          //     context, MaterialPageRoute(builder: (context) => FirstPage()));
+          _nextPage();
         },
         child: Text(
-          "Go to next page!",
-          style: TextStyle(color: Colors.white),
+          text(),
+          style: TextStyle(color: Colors.white, fontSize: 20),
         ),
-      )),
-    );
+      ),
+    ));
   }
 }
